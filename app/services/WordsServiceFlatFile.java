@@ -189,7 +189,7 @@ public class WordsServiceFlatFile implements WordsService {
         return true;
     }
 
-    public BufferedReader getWordReader() {
+    private BufferedReader getWordReader() {
         BufferedReader bReader = null;
         try {
             bReader = new BufferedReader(new FileReader(getWordsFile()));
@@ -200,7 +200,7 @@ public class WordsServiceFlatFile implements WordsService {
         return bReader;
     }
 
-    public File getWordsFile() {
+    private File getWordsFile() {
         File wordFile = new File(fullWordsPath);
         try {
             if(!wordFile.exists()) {
@@ -213,7 +213,7 @@ public class WordsServiceFlatFile implements WordsService {
         return wordFile;
     }
 
-    public File renameWordsFile() {
+    private File renameWordsFile() {
         File wordFile = getWordsFile();
         File tempWordsFile = new File(config.getString("words.file.path") + "/wordfile.temp");
         if(wordFile.exists()) {
@@ -226,13 +226,13 @@ public class WordsServiceFlatFile implements WordsService {
         return tempWordsFile;
     }
 
-    public boolean reinstateTempWordsFile(File tempWordsFile) {
+    private boolean reinstateTempWordsFile(File tempWordsFile) {
         boolean result = tempWordsFile.renameTo(new File(fullWordsPath));
         log.debug("Temp File Reinstated: " + tempWordsFile.getAbsolutePath());
         return result;
     }
 
-    public boolean deleteFile(File fileToDelete) {
+    private boolean deleteFile(File fileToDelete) {
         return fileToDelete.delete();
     }
 
