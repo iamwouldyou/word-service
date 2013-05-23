@@ -71,25 +71,38 @@ o Right now all requests are designed synchronously. The next version will need 
 -- As a poc we can implement synchronously with the goal to have those implement paging and to later add the asynchronous
    services in the next iteration.
 
+Current Issues
+--------------
+* Test harnes is throwing exception related to inject Spring beans
+
+Remember To
+--------------
+* Run $:play idea after you change sbt dependencies. They will not show up in your IDE util the project files have been rewritten.
+  * Intellij initially looks in the repository/local even though new dependencies are located in respository/cache
+
+TODO
+----
+* Fix issue with test harness throwing exception 
+* Create Result object for update and insert
+* Pass in file path to WordsServiceFlatFile so we can test with different file 
+
 Play Notes
+---------
 Pros
-o Easy to get up and running quickly creating rest web services
-o Controllers are automatically reloaded when developing, no need to restart server.
+* Easy to get up and running quickly creating rest web services
+* Controllers are automatically reloaded when developing, no need to restart server.
 
 Cons
-o Issue with Ide and dependencies not syncing properly
-o If using Java will need to use 3rd party api to do DI
+* Issue with Ide and dependencies not syncing properly
+* If using Java will need to use 3rd party api to do DI
 
 
 Scala Notes
-o Recommend using the Scala version of Play.
--- Play is written in scala and the syntax in the routing file is scala.
--- Can integrate spring or go with DI pattern like Cake.
-o Write a function parameter to check if the file has been read
-o Write a function parameter to do the file try catch block and closing of IO
-o Write a function parameter to do divide and conquer find - Can use in update and insert
+-----------
+* Recommend using the Scala version of Play.
+* Play is written in scala and the syntax in the routing file is scala.
+* Can integrate spring or go with DI pattern like Cake.
+* Write a function parameter to check if the file has been read
+* Write a function parameter to do the file try catch block and closing of IO
+* Write a function parameter to do divide and conquer find - Can use in update and insert
 
-TODO
-o Fix issue with test harness throwing exception
-o Create Result object for update and insert
-o Pass in file path to WordsServiceFlatFile so we can test with different file
