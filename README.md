@@ -5,7 +5,9 @@ Create a restful web service that receives words and puts them in a data store. 
 
 The web service will have four endpoints to access information about the words:
 Note: 5 Endpoints Described
+
 1) A list of all words stored in the file
+
 2) The ranking, based on number of occurrences, that the word is.  i.e. if “can” “soup” and “Campbell”
    all exist in the data store, where “can” was entered twice, and “soup” and “Campbell” were each entered once,
    the ranking of “can” would be 1, whereas “soup” and “Campbell” would each be 2.
