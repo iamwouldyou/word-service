@@ -97,7 +97,7 @@ Cons
 Scala Notes
 -----------
 * Recommend using the Scala version of Play.
-* Play is written in scala and the syntax in the routing file is scala.
+* Play is written in scala. Java version has some Scala syntax. See routing file.
 * Can integrate spring or go with DI pattern like Cake.
 * Write a function parameter to check if the file has been read
 * Write a function parameter to do the file try catch block and closing of IO
