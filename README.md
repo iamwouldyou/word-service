@@ -74,6 +74,7 @@ TODO
 ----
 * Fix issue with test harness throwing exception 
 * Add async services for list endpoints
+* Create different thread to write back to words file
 
 Remember To
 --------------
