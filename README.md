@@ -3,12 +3,12 @@ Word Rest Web Service Application
 
 Endpoints
 ---------
-/words/api/1.0/insert/:word 
-/words/api/1.0/update/:word/:count
-/words/api/1.0/list
-/words/api/1.0/list-by-rank
-/words/api/1.0/count/:word
-/words/api/1.0/rank/:word
+    /words/api/1.0/insert/:word
+    /words/api/1.0/update/:word/:count
+    /words/api/1.0/list
+    /words/api/1.0/list-by-rank
+    /words/api/1.0/count/:word
+    /words/api/1.0/rank/:word
 
 Architecture
 ------------
