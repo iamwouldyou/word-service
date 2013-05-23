@@ -10,22 +10,31 @@ The web service will have four endpoints to access information about the words:
 * Note: 5 Endpoints Described
 
 1) A list of all words stored in the file.
+
 2) The ranking, based on number of occurrences, that the word is.  i.e. if “can” “soup” and “Campbell”
    all exist in the data store, where “can” was entered twice, and “soup” and “Campbell” were each entered once,
    the ranking of “can” would be 1, whereas “soup” and “Campbell” would each be 2
+   
 3) The number of occurrences for a specific word.
+
 4) The web service will have one insert endpoint, which inserts a specific word into the data store,
    and increments the number of times it has appeared.
+   
 5) The web service will also have an “update” endpoint, which can be used to override the counting behavior,
    and force the number of times a word has appeared to match the input of this endpoint.
    i.e. if “can” were entered twice, we could update the count to be “1”, using the update endpoint.
    
+   
 Please highlight the following in a brief discussion:
+
 1) any scalability concerns with this solution
   a. suggested ways of moving it from one web server to several web servers
      i. suggested technologies that would make the above easier
+     
 2) highlight any data consistency concerns and decisions that were made when you designed your system
+
 3) why requests were either designed synchronously or asynchronously
+
 
 
 Answers:
