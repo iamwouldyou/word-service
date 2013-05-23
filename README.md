@@ -74,8 +74,6 @@ TODO
 ----
 * Fix issue with test harness throwing exception 
 * Add async services for list endpoints
-* Create Result object for update and insert
-* Pass in file path to WordsServiceFlatFile so we can test with different file  
 
 Remember To
 --------------
