@@ -89,7 +89,7 @@ Pros
 * Controllers are automatically reloaded when developing, no need to restart server.
 
 Cons
-* Issue with Ide and dependencies not syncing properly
+* Issue with Intellij and dependencies not syncing properly
 * If using Java will need to use 3rd party api to do DI
 
 
