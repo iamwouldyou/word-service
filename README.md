@@ -43,33 +43,30 @@ Answers
 1)
 
 * As load is increased on the web services we will have points of contention at the app server level.
-** We can move to using a load balancer in front of multiple application servers. For instance we can have multiple
+   * We can move to using a load balancer in front of multiple application servers. For instance we can have multiple
    instances of tomcat running these webservers with
-*** Can use Jenkins to help build, test and deploy the restful web services to the tomcat instances. By using scripting
-*** or Jenkins plugins we can stop the servers, deploy and restart servers.
+      * Can use Jenkins to help build, test and deploy the restful web services to the tomcat instances. By using scripting
+      * or Jenkins plugins we can stop the servers, deploy and restart servers.
 
-o Another point of contention will be in the access of the data store, in this case the flat file.
--- One solution would be to move to a different datastore like a rdbms or nosql database with we can then cluster
--- We could also implement paging to reduce the amount of data that is retrieved with one call
--- If we must stick with flat files we could start by creating a file for each letter in the alphabet with only words
-   in each file that start with that letter.
---- This could also help in sending back chunks of data in an asynchronous service call.
---- This is a rudimentary MapReduce scenario.
+* Another point of contention will be in the access of the data store, in this case the flat file.
+   * One solution would be to move to a different datastore like a rdbms or nosql database with we can then cluster
+   * We could also implement paging to reduce the amount of data that is retrieved with one call
+   * If we must stick with flat files we could start by creating a file for each letter in the alphabet with only words
+     in each file that start with that letter.
+      * This could also help in sending back chunks of data in an asynchronous service call.
+      * This is a rudimentary MapReduce scenario.
 
 2)
-o This simple application does not currently check if the word being inserted is a valid word.
--- We would need to build a service to check if a word is valid against an interal or external dictionary type service.
--- We would also need to gather the requirement on if slang words are valid.
-o There is also no localization built into the application if we want to support different languages.
-  Would need to discover if we need to support different languages.
-o There is also no check to discover if the word was spelled incorrectly. We may just require the correct spelling and
-  and return no results. If there is not results we could also return a suggestion block for words that are close matches.
+* This simple application does not currently check if the word being inserted is a valid word.
+   * We would need to build a service to check if a word is valid against an interal or external dictionary type service.
+   * We would also need to gather the requirement on if slang words are valid.
+* There is also no localization built into the application if we want to support different languages. Would need to discover if we need to support different languages.
+* There is also no check to discover if the word was spelled incorrectly. We may just require the correct spelling and and return no results. If there is not results we could also return a suggestion block for words that are close matches.
 
 3)
-o Right now all requests are designed synchronously. The next version will need to create asynchronous services for the
+* Right now all requests are designed synchronously. The next version will need to create asynchronous services for the
   list endpoints if we do not implement paging. The list endpoints will take longer periods of time as our datastore fills up.
--- As a poc we can implement synchronously with the goal to have those implement paging and to later add the asynchronous
-   services in the next iteration.
+   * As a poc we can implement synchronously with the goal to have those implement paging and to later add the asynchronous services in the next iteration.
 
 Current Issues
 --------------
