@@ -82,7 +82,7 @@ Issues
 TODO
 ----
 * Add async services for list endpoints
-* Create different thread to write back to words file
+* Create different thread (Akka) to write back to words file
 * Fix issue with test harness throwing exception 
    * Write Unit Tests 
 
