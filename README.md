@@ -60,21 +60,27 @@ The web service will have four endpoints to access information about the words:
   list endpoints if we do not implement paging. The list endpoints will take longer periods of time as our datastore fills up and more users are ou.
    * As a poc we can implement synchronously with the goal to have those implement paging and to later add the asynchronous services in the next iteration.
 
-Current Issues
+Issues
 --------------
+===== Current =====
 * Test harnes is throwing exception related to inject Spring beans
+   * Spent some time trying to get the beans loaded in test class. Had to move on because of time contraint 
 
-Remember To
---------------
-* Run $:play idea after you change sbt dependencies. They will not show up in your IDE util the project files have been rewritten.
-  * Intellij initially looks in the repository/local even though new dependencies are located in respository/cache
+===== Previous =====
+* Adding new dependencies to sbt. Intellij looks in a different directory.
+   * This took some cycles to figure out being new to sbt and ivy. 
 
 TODO
 ----
 * Fix issue with test harness throwing exception 
 * Add async services for list endpoints
 * Create Result object for update and insert
-* Pass in file path to WordsServiceFlatFile so we can test with different file 
+* Pass in file path to WordsServiceFlatFile so we can test with different file  
+
+Remember To
+--------------
+* Run $:play idea after you change sbt dependencies. They will not show up in your IDE util the project files have been rewritten.
+  * Intellij initially looks in the repository/local even though new dependencies are located in respository/cache
 
 Play Notes
 ---------
