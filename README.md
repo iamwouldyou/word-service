@@ -24,23 +24,12 @@ The web service will have four endpoints to access information about the words:
    and force the number of times a word has appeared to match the input of this endpoint.
    i.e. if “can” were entered twice, we could update the count to be “1”, using the update endpoint.
    
-   
-Please highlight the following in a brief discussion:
+
+### Questions ###
 
 1) any scalability concerns with this solution
   a. suggested ways of moving it from one web server to several web servers
      i. suggested technologies that would make the above easier
-     
-2) highlight any data consistency concerns and decisions that were made when you designed your system
-
-3) why requests were either designed synchronously or asynchronously
-
-
-
-Answers
--------
-
-1)
 
 * As load is increased on the web services we will have points of contention at the app server level.
    * We can move to using a load balancer in front of multiple application servers. For instance we can have multiple
@@ -56,14 +45,14 @@ Answers
       * This could also help in sending back chunks of data in an asynchronous service call.
       * This is a rudimentary MapReduce scenario.
 
-2)
+2) highlight any data consistency concerns and decisions that were made when you designed your system
 * This simple application does not currently check if the word being inserted is a valid word.
    * We would need to build a service to check if a word is valid against an interal or external dictionary type service.
    * We would also need to gather the requirement on if slang words are valid.
 * There is also no localization built into the application if we want to support different languages. Would need to discover if we need to support different languages.
 * There is also no check to discover if the word was spelled incorrectly. We may just require the correct spelling and and return no results. If there is not results we could also return a suggestion block for words that are close matches.
 
-3)
+3) why requests were either designed synchronously or asynchronously
 * Right now all requests are designed synchronously. The next version will need to create asynchronous services for the
   list endpoints if we do not implement paging. The list endpoints will take longer periods of time as our datastore fills up.
    * As a poc we can implement synchronously with the goal to have those implement paging and to later add the asynchronous services in the next iteration.
