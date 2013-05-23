@@ -37,14 +37,16 @@ Please highlight the following in a brief discussion:
 
 
 
-Answers:
+Answers
+-------
 
 1)
-o As load is increased on the web services we will have points of contention at the app server level.
--- We can move to using a load balancer in front of multiple application servers. For instance we can have multiple
+
+* As load is increased on the web services we will have points of contention at the app server level.
+** We can move to using a load balancer in front of multiple application servers. For instance we can have multiple
    instances of tomcat running these webservers with
---- Can use Jenkins to help build, test and deploy the restful web services to the tomcat instances. By using scripting
---- or Jenkins plugins we can stop the servers, deploy and restart servers.
+*** Can use Jenkins to help build, test and deploy the restful web services to the tomcat instances. By using scripting
+*** or Jenkins plugins we can stop the servers, deploy and restart servers.
 
 o Another point of contention will be in the access of the data store, in this case the flat file.
 -- One solution would be to move to a different datastore like a rdbms or nosql database with we can then cluster
