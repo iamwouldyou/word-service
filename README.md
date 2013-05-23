@@ -1,6 +1,11 @@
 Word Rest Web Service Application
 =====================================
 
+Architecture
+------------
+* Play 2.1.1 for Java
+* Spring 3.2 for DI
+
 Requirements
 ------------
 
@@ -47,12 +52,12 @@ The web service will have four endpoints to access information about the words:
 * This simple application does not currently check if the word being inserted is a valid word.
    * We would need to build a service to check if a word is valid against an interal or external dictionary type service.
    * We would also need to gather the requirement on if slang words are valid.
-* There is also no localization built into the application if we want to support different languages. Would need to discover if we need to support different languages.
-* There is also no check to discover if the word being searched was mis-spelled. We may just require the correct spelling and return no results. If there is no results we could also return a suggestion block for words that are close matches.
+* There is no localization built into the application if we want to support different languages. Would need to discover if we need to support different languages.
+* There is no check for misspelled search words. If there are no results we could return a suggestion block for words that are close matches.
 
 3) why requests were either designed synchronously or asynchronously
 * Right now all requests are designed synchronously. The next version will need to create asynchronous services for the
-  list endpoints if we do not implement paging. The list endpoints will take longer periods of time as our datastore fills up.
+  list endpoints if we do not implement paging. The list endpoints will take longer periods of time as our datastore fills up and more users are ou.
    * As a poc we can implement synchronously with the goal to have those implement paging and to later add the asynchronous services in the next iteration.
 
 Current Issues
@@ -67,6 +72,7 @@ Remember To
 TODO
 ----
 * Fix issue with test harness throwing exception 
+* Add async services for list endpoints
 * Create Result object for update and insert
 * Pass in file path to WordsServiceFlatFile so we can test with different file 
 
