@@ -9,6 +9,7 @@ GET     /words/api/1.0/update/:word/:count  @controllers.WordController.updateWo
 GET     /words/api/1.0/list                 @controllers.WordController.listWords()
 GET     /words/api/1.0/list-by-rank         @controllers.WordController.listWordsRanked()
 GET     /words/api/1.0/count/:word          @controllers.WordController.getWordCount(word:String)
+GET     /words/api/1.0/rank/:word           @controllers.WordController.getWordRank(word:String)
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)

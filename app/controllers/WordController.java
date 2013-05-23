@@ -1,5 +1,6 @@
 package controllers;
 
+import models.WordModel;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.node.ObjectNode;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +35,14 @@ public class WordController {
         String json = Json.toJson(wordsService.getWordCount(word)).toString();
         return ok(json);
     }
+
+    public Result getWordRank(String wordName) {
+        WordModel word = wordsService.getWordRank(wordName);
+        ObjectNode json = Json.newObject();
+        json.put("Ranking", word.getRank());
+        return ok(json);
+    }
+
     public Result listWords() {
         String json = Json.toJson(wordsService.listWords()).toString();
         return ok(json);

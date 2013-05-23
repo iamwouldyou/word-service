@@ -16,4 +16,6 @@ public interface WordsService {
     public List<WordModel> listWordsByRanking();
 
     public WordModel getWordCount(String word);
+
+    public WordModel getWordRank(String word);
 }

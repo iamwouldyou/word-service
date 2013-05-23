@@ -61,6 +61,10 @@ public class WordsServiceFlatFile implements WordsService {
         return findWord(wordName);
     }
 
+    @Override
+    public WordModel getWordRank(String wordName) {
+        return findWord(wordName);
+    }
 
     private List<WordModel> loadWords() {
         BufferedReader reader = getWordReader();
@@ -115,6 +119,7 @@ public class WordsServiceFlatFile implements WordsService {
             else {
                 int middle = findList.size() >>> 1;
                 model = findList.get(middle);
+                model.setRank(middle + 1);
             }
 
             if(model.getWordName().equals(wordName)) {

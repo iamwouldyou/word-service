@@ -1,10 +1,13 @@
 package models;
 
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.map.annotate.JsonView;
+
 public class WordModel {
     private String wordName;
     private int wordCount;
-
+    private int rank;
 
     public WordModel(String wordName, int wordCount) {
         this.wordName = wordName;
@@ -27,4 +30,12 @@ public class WordModel {
         this.wordCount = wordCount;
     }
 
+    @JsonIgnore
+    public int getRank() {
+        return rank;
+    }
+
+    public void setRank(int rank) {
+        this.rank = rank;
+    }
 }
