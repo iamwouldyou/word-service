@@ -25,32 +25,30 @@ The web service will have four endpoints to access information about the words:
    i.e. if “can” were entered twice, we could update the count to be “1”, using the update endpoint.
    
 
-### Questions ###
+#### Questions ####
 
 1) any scalability concerns with this solution
-  a. suggested ways of moving it from one web server to several web servers
-     i. suggested technologies that would make the above easier
+   a. suggested ways of moving it from one web server to several web servers
+      i. suggested technologies that would make the above easier
 
 * As load is increased on the web services we will have points of contention at the app server level.
    * We can move to using a load balancer in front of multiple application servers. For instance we can have multiple
-   instances of tomcat running these webservers with
-      * Can use Jenkins to help build, test and deploy the restful web services to the tomcat instances. By using scripting
-      * or Jenkins plugins we can stop the servers, deploy and restart servers.
+     instances of tomcat running these webservers with
+      * Can use Jenkins to help build, test and deploy the restful web services to the tomcat instances. By using scripting or Jenkins plugins we can stop the servers, deploy and restart servers.
 
 * Another point of contention will be in the access of the data store, in this case the flat file.
-   * One solution would be to move to a different datastore like a rdbms or nosql database with we can then cluster
+   * One solution would be to move to a different datastore like a rdbms or nosql database which we can then cluster
    * We could also implement paging to reduce the amount of data that is retrieved with one call
    * If we must stick with flat files we could start by creating a file for each letter in the alphabet with only words
      in each file that start with that letter.
       * This could also help in sending back chunks of data in an asynchronous service call.
-      * This is a rudimentary MapReduce scenario.
 
 2) highlight any data consistency concerns and decisions that were made when you designed your system
 * This simple application does not currently check if the word being inserted is a valid word.
    * We would need to build a service to check if a word is valid against an interal or external dictionary type service.
    * We would also need to gather the requirement on if slang words are valid.
 * There is also no localization built into the application if we want to support different languages. Would need to discover if we need to support different languages.
-* There is also no check to discover if the word was spelled incorrectly. We may just require the correct spelling and and return no results. If there is not results we could also return a suggestion block for words that are close matches.
+* There is also no check to discover if the word being searched was mis-spelled. We may just require the correct spelling and return no results. If there is no results we could also return a suggestion block for words that are close matches.
 
 3) why requests were either designed synchronously or asynchronously
 * Right now all requests are designed synchronously. The next version will need to create asynchronous services for the
