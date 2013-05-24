@@ -108,6 +108,7 @@ Scala Notes
 * Recommend using the Scala version of Play.
 * Play is written in scala. Java version has some Scala syntax. See routing file.
 * Akka looks promising to implement async and concurrency. 
+    * Excellent built in functionality to handle threading issues. 
     * It's built with router, clustering and other mechanisms for the coding environment instead of just the system level. Take advantage of your processing power!
 * Can integrate spring or go with DI pattern like Cake.
 * Write a function parameter to check if the file has been read
