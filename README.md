@@ -6,7 +6,6 @@ Endpoints
     /words/api/1.0/insert/:word
     /words/api/1.0/update/:word/:count
     /words/api/1.0/list
-    /words/api/1.0/list-by-rank
     /words/api/1.0/count/:word
     /words/api/1.0/rank/:word
 
@@ -82,7 +81,6 @@ Issues
 TODO
 ----
 * Add async services for list endpoints
-* Create different thread (Akka) to write back to words file
 * Fix issue with test harness throwing exception 
    * Write Unit Tests 
 
