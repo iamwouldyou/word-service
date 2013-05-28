@@ -1,36 +1,37 @@
 package services;
 
 
+import akka.actor.*;
 import models.WordModel;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import play.Configuration;
 import play.Play;
-import scalax.io.support.FileUtils;
+import play.Logger;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.CopyOnWriteArrayList;
 
-/**
- * The number of words in a dictionary can vary based on publisher.. up to 500k.
- * As our file gets larger we may need to restrict list of words to a letter or range of letters.
- * or
- * Use asynchronous functionality to load the words in the background.
- */
 @Service
 public class WordsServiceFlatFile implements WordsService {
-    static final Logger log = LoggerFactory.getLogger(WordsServiceFlatFile.class);
 
     private static Configuration config = Play.application().configuration();
     private String fullWordsPath = config.getString("words.file.path") + "/" +config.getString("words.file.name");
+
     private volatile List<WordModel> wordModelList;
+    private ActorSystem actorSystem = ActorSystem.create("WordsActorSystem");
+    private ActorRef writeWordsFileActor;
 
     public WordsServiceFlatFile() {
         wordModelList = loadWords();
+        writeWordsFileActor = actorSystem.actorOf(new Props(new UntypedActorFactory() {
+            public UntypedActor create() {
+                return new WriteWordsActor();
+            }
+        }),
+        "wordsWriteActor");
     }
 
     @Override
@@ -47,13 +48,7 @@ public class WordsServiceFlatFile implements WordsService {
 
     @Override
     public List<WordModel> listWords() {
-        sortWordList();
         return wordModelList;
-    }
-
-    @Override
-    public List<WordModel> listWordsByRanking() {
-        return getAllWordsByRank();
     }
 
     @Override
@@ -68,7 +63,7 @@ public class WordsServiceFlatFile implements WordsService {
 
     private List<WordModel> loadWords() {
         BufferedReader reader = getWordReader();
-        ArrayList<WordModel> wordsList = new ArrayList<WordModel>(236000);
+        List<WordModel> wordsList = new ArrayList<WordModel>();
         String currentWord = "";
         try {
             while ((currentWord = reader.readLine()) != null) {
@@ -78,33 +73,23 @@ public class WordsServiceFlatFile implements WordsService {
             }
         }
         catch(IOException e) {
-            log.error("IOException trying to read file", e);
+            Logger.error("IOException trying to read file", e);
         }
         finally {
             try {
                 reader.close();
             }
             catch(IOException e){
-                log.error("Exception closing words.txt buffered reader", e);
+                Logger.error("Exception closing words.txt buffered reader", e);
             }
         }
-        return wordsList;
+        return new CopyOnWriteArrayList<WordModel>(wordsList); // Thread Safe but slow for our big list!
     }
 
-    private List<WordModel> getAllWordsByRank() {
-        List<WordModel> sortedByRankWords = wordModelList;
-        Collections.sort(sortedByRankWords, new Comparator<WordModel>() {
-            @Override
-            public int compare(WordModel wordModel, WordModel wordModel2) {
-                if(wordModel.getWordCount() == wordModel2.getWordCount()) {
-                    return 0;
-                }
-                return wordModel.getWordCount() < wordModel2.getWordCount() ? 1 : -1;
-            }
-        });
-        return sortedByRankWords;
-    }
-
+    /**
+     * Manual Binary Search. Could just use Collections with compare.
+     *
+     */
     private WordModel findWord(String wordName) {
         WordModel word = new WordModel(wordName,0);
         List<WordModel> findList = wordModelList;
@@ -140,11 +125,11 @@ public class WordsServiceFlatFile implements WordsService {
     private boolean updateWordCount(WordModel newWordCount) {
         WordModel word = findWord(newWordCount.getWordName());
         if(word.getWordCount() == 0) {
-            word = insertWord(word);
+            insertWord(word);
         }
         else {
             word.setWordCount(newWordCount.getWordCount());
-            writeWordsFile();
+            writeWordsFileActor.tell("write words file");
         }
         return true;
     }
@@ -154,11 +139,15 @@ public class WordsServiceFlatFile implements WordsService {
         if(word.getWordCount() == 0) {
             word.setWordCount(1);
             wordModelList.add(word);
+            sortWordList();
         }
         else {
             word.setWordCount(word.getWordCount() + 1);
         }
-        writeWordsFile();
+
+        writeWordsFileActor.tell("write words file");
+        System.out.println("AFTER WRITE WORDS ACTOR CALL!");
+
         return word;
     }
 
@@ -176,7 +165,7 @@ public class WordsServiceFlatFile implements WordsService {
             }
         }
         catch(Exception e) {
-            log.error("IOException writing file", e);
+            Logger.error("IOException writing file", e);
             if(deleteFile(getWordsFile())) {
                 reinstateTempWordsFile(tempWordFile);
             }
@@ -187,7 +176,7 @@ public class WordsServiceFlatFile implements WordsService {
                 writer.close();
             }
             catch(IOException e){
-                log.error("Exception writing to words file", e);
+                Logger.error("Exception writing to words file", e);
             }
         }
         deleteFile(tempWordFile);
@@ -200,7 +189,7 @@ public class WordsServiceFlatFile implements WordsService {
             bReader = new BufferedReader(new FileReader(getWordsFile()));
         }
         catch(IOException e) {
-            log.error("IOException trying load writer", e);
+            Logger.error("IOException trying load writer", e);
         }
         return bReader;
     }
@@ -213,7 +202,7 @@ public class WordsServiceFlatFile implements WordsService {
             }
         }
         catch(IOException e) {
-            log.error("IOException trying to load file: " + fullWordsPath, e);
+            Logger.error("IOException trying to load file: " + fullWordsPath, e);
         }
         return wordFile;
     }
@@ -226,14 +215,14 @@ public class WordsServiceFlatFile implements WordsService {
             if(result) {
                 wordFile.delete();
             }
-            log.debug("Temp File Path: " + wordFile.getAbsolutePath());
+            Logger.debug("Temp File Path: " + wordFile.getAbsolutePath());
         }
         return tempWordsFile;
     }
 
     private boolean reinstateTempWordsFile(File tempWordsFile) {
         boolean result = tempWordsFile.renameTo(new File(fullWordsPath));
-        log.debug("Temp File Reinstated: " + tempWordsFile.getAbsolutePath());
+        Logger.debug("Temp File Reinstated: " + tempWordsFile.getAbsolutePath());
         return result;
     }
 
@@ -249,4 +238,80 @@ public class WordsServiceFlatFile implements WordsService {
             }
         });
     }
+
+
+    /**
+     * Experimenting with akka...
+     */
+    private class WriteWordsActor extends UntypedActor {
+
+        private BlockingQueue<Date> writeQueue = new ArrayBlockingQueue<Date>(2);
+
+        @Override
+        public void onReceive(Object message) throws Exception {
+            if (message instanceof String) {
+
+                Logger.info("Received String message: " + message);
+
+                if(((String) message).contains("write words file")) {
+
+                    Logger.debug("QUEUE REMAINNG CAPACITY: " + writeQueue.remainingCapacity());
+
+                    if(writeQueue.remainingCapacity() == 0) {
+                        Logger.debug("Reached Write Words Capacity. No need to add. Next write will pick up changes.");
+                        return;
+                    }
+
+                    writeQueue.add(new Date());
+
+                    doQueue();
+                }
+
+            }
+            else {
+                this.getContext().stop(this.getSelf());
+                unhandled(message);
+            }
+        }
+
+        private void doQueue() {
+            for(int i = 0; i < 3; i++) {
+                Logger.debug("Write Words File!");
+
+                long startTime = System.currentTimeMillis();
+
+                boolean result = writeWordsFile();
+
+                long stopTime = System.currentTimeMillis();
+
+                long elapsedTime = (stopTime - startTime) / 1000;
+                Logger.debug("File Write Took " + elapsedTime + " Seconds.");
+
+                if(result) {
+                    try {
+                        writeQueue.take();
+                    }
+                    catch (InterruptedException e) {
+                        Logger.error("Trying to remove write job from queue", e);
+                    }
+                    break;
+                }
+            }
+        }
+
+        @Override
+        public void preStart() {
+            super.preStart();
+            Logger.debug("Write Words File Actor STARTED");
+        }
+
+        @Override
+        public void postStop() {
+            super.postStop();
+            Logger.debug("Write Words File Actor STOPPED");
+        }
+    }
 }
+
+
+

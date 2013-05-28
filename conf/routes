@@ -3,11 +3,10 @@
 # ~~~~
 
 # Home page
-GET     /                           controllers.Application.index()
+GET     /                                   controllers.Application.index()
 GET     /words/api/1.0/insert/:word         @controllers.WordController.insertWord(word:String)
 GET     /words/api/1.0/update/:word/:count  @controllers.WordController.updateWord(word:String, count:Int)
 GET     /words/api/1.0/list                 @controllers.WordController.listWords()
-GET     /words/api/1.0/list-by-rank         @controllers.WordController.listWordsRanked()
 GET     /words/api/1.0/count/:word          @controllers.WordController.getWordCount(word:String)
 GET     /words/api/1.0/rank/:word           @controllers.WordController.getWordRank(word:String)
 

@@ -48,9 +48,4 @@ public class WordController {
         return ok(json);
     }
 
-    public Result listWordsRanked() {
-        String json = Json.toJson(wordsService.listWordsByRanking()).toString();
-        return ok(json);
-    }
-
 }
