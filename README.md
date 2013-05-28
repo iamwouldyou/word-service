@@ -6,7 +6,6 @@ Endpoints
     /words/api/1.0/insert/:word
     /words/api/1.0/update/:word/:count
     /words/api/1.0/list
-    /words/api/1.0/list-by-rank
     /words/api/1.0/count/:word
     /words/api/1.0/rank/:word
 
@@ -56,6 +55,7 @@ The web service will have four endpoints to access information about the words:
    * If we must stick with flat files we could start by creating a file for each letter in the alphabet with only words
      in each file that start with that letter.
       * This could also help in sending back chunks of data in an asynchronous service call.
+   * Because we are using a threadsafe List there will be contention for adds and reads.   
 
 2) highlight any data consistency concerns and decisions that were made when you designed your system
 * This simple application does not currently check if the word being inserted is a valid word.
@@ -68,6 +68,7 @@ The web service will have four endpoints to access information about the words:
 * Right now all requests are designed synchronously. The next version will need to create asynchronous services for the
   list endpoints if we do not implement paging. The list endpoints will take longer periods of time as our datastore fills up and more users are hitting our endpoints.
    * As a poc we can implement synchronously with the goal to have those implement paging and to later add the asynchronous services in the next iteration.
+   * As currently designed the insertion of the new word will create a new copy of the words list which will affect any current find operations. As a result with the current design these endpoints are good candidates for asyncrhonous functionality as well.
 
 Issues
 --------------
@@ -82,7 +83,6 @@ Issues
 TODO
 ----
 * Add async services for list endpoints
-* Create different thread (Akka) to write back to words file
 * Fix issue with test harness throwing exception 
    * Write Unit Tests 
 
