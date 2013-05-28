@@ -68,7 +68,7 @@ The web service will have four endpoints to access information about the words:
 * Right now all requests are designed synchronously. The next version will need to create asynchronous services for the
   list endpoints if we do not implement paging. The list endpoints will take longer periods of time as our datastore fills up and more users are hitting our endpoints.
    * As a poc we can implement synchronously with the goal to have those implement paging and to later add the asynchronous services in the next iteration.
-   * As currently designed the insertion of the new word will create a new copy of list which will affect any current find operations. As a result with the current design these endpoints are good candidates for asyncrhonous functionality.
+   * As currently designed the insertion of the new word will create a new copy of list which will affect any current find operations. As a result with the current design these endpoints are good candidates for asyncrhonous functionality as well.
 
 Issues
 --------------
