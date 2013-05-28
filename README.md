@@ -1,6 +1,15 @@
 Word Rest Web Service Application
 =====================================
 
+Endpoints
+---------
+    /words/api/1.0/insert/:word
+    /words/api/1.0/update/:word/:count
+    /words/api/1.0/list
+    /words/api/1.0/list-by-rank
+    /words/api/1.0/count/:word
+    /words/api/1.0/rank/:word
+
 Architecture
 ------------
 * Play 2.1.1 for Java
@@ -73,7 +82,7 @@ Issues
 TODO
 ----
 * Add async services for list endpoints
-* Create different thread to write back to words file
+* Create different thread (Akka) to write back to words file
 * Fix issue with test harness throwing exception 
    * Write Unit Tests 
 
@@ -98,6 +107,9 @@ Scala Notes
 -----------
 * Recommend using the Scala version of Play.
 * Play is written in scala. Java version has some Scala syntax. See routing file.
+* Akka looks promising to implement async and concurrency. 
+    * Excellent built in functionality to handle threading issues. 
+    * It's built with router, clustering and other mechanisms for the coding environment instead of just the system level. Take advantage of your processing power!
 * Can integrate spring or go with DI pattern like Cake.
 * Write a function parameter to check if the file has been read
 * Write a function parameter to do the file try catch block and closing of IO
