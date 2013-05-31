@@ -41,7 +41,7 @@ public class WordController {
                                 if(!success) {
                                     node.put("success", false);
                                 }
-                                return ok(Json.toJson(word).toString());
+                                return ok(node);
                             }
                         }
                 )
