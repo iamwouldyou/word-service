@@ -21,6 +21,7 @@ public class WordServiceTest extends AbstractJUnit4SpringContextTests {
     @Test
     public void testGetWordRank() {
         WordModel word = wordsServiceFlatFile.getWordRank("bridge");
+        System.out.println("WORD: " + word.getWordName());
         assertThat(word.getWordName().equals("bridge"));
     }
 }
