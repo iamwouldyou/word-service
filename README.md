@@ -80,12 +80,6 @@ Issues
 * Adding new dependencies to sbt. Intellij looks in a different directory.
    * This took some cycles to figure out being new to sbt and ivy. 
 
-TODO
-----
-* Add async services for list endpoints
-* Fix issue with test harness throwing exception 
-   * Write Unit Tests 
-
 
 Remember To
 --------------
