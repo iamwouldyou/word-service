@@ -24,20 +24,47 @@ public class WordController {
     @Autowired
     private WordsService wordsService;
 
-    public Result updateWord(String word, int count) {
-        boolean success = wordsService.updateWord(word, count);
-        ObjectNode node = Json.newObject();
-        node.put("success", true);
-        if(!success) {
-            node.put("success", false);
-        }
-        return ok(node);
+    public Result updateWord(final String word, final int count) {
+        F.Promise<Boolean> wordListPromise = play.libs.Akka.future(
+                new Callable <Boolean>() {
+                    public Boolean call() {
+                        return wordsService.updateWord(word, count);
+                    }
+                }
+        );
+        return async(
+                wordListPromise.map(
+                        new F.Function<Boolean, Result>() {
+                            public Result apply(Boolean success) {
+                                ObjectNode node = Json.newObject();
+                                node.put("success", true);
+                                if(!success) {
+                                    node.put("success", false);
+                                }
+                                return ok(Json.toJson(word).toString());
+                            }
+                        }
+                )
+        );
     }
 
-    public Result insertWord(String word) {
-        String json = Json.toJson(wordsService.insertWord(word)).toString();
-
-        return ok(json);
+    public Result insertWord(final String word) {
+        F.Promise<WordModel> wordListPromise = play.libs.Akka.future(
+                new Callable <WordModel>() {
+                    public WordModel call() {
+                        return wordsService.insertWord(word);
+                    }
+                }
+        );
+        return async(
+                wordListPromise.map(
+                        new F.Function<WordModel, Result>() {
+                            public Result apply(WordModel word) {
+                                return ok(Json.toJson(word).toString());
+                            }
+                        }
+                )
+        );
     }
 
     public Result getWordCount(String word) {
